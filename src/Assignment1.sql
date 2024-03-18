@@ -39,9 +39,20 @@ select s.userid, sum(p.price) as 'Total amount in dollars' from product p join s
 select distinct created_date, userid from sales order by userid, created_date;
 
 #8.Find the first product purchased by each customer using 3 tables(users, sales, product)
-select min(created_date) as first_purchased_date,sales.userid,product_name
-from product join sales on sales.product_id = product.product_id join users
-on sales.userid=users.userid group by sales.userid,product_name;
+SELECT subquery.userid,
+       subquery.FirstPurchasedDate,
+       subquery.product_name
+FROM (
+    SELECT u.userid,
+           s.created_date AS FirstPurchasedDate,  -- Alias the column here
+           p.product_name,
+           ROW_NUMBER() OVER (PARTITION BY s.userid ORDER BY s.created_date) AS Rno
+    FROM users u
+    JOIN sales s ON u.userid = s.userid
+    JOIN product p ON s.product_id = p.product_id
+) AS subquery
+WHERE subquery.Rno = 1;
+
 
 #9.What is the most purchased item of each customer and how many times the customer has purchased it: output should have 2 columns count of the items as item_count and customer name
 select max(count_product),userid from (select userid, count(distinct product_id) as 'count_product' from sales group by userid)
