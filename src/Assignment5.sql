@@ -1,29 +1,38 @@
-#create database for assignment4
-create database ass4;
-use ass4;
-#create table email_signup
-create table email_signup(id int primary key, email_id varchar(30), signup_date date);
-#inserting records to email_signup
-insert into email_signup values(1, 'Rajesh@Gmail.com', '2022-02-01'),
-(2, 'Rakesh_gmail@rediffmail.com', '2023-01-22'),
-(3, 'Hitest@Gmail.com', '2020-09-08'),
-(4, 'Salil@Gmmail.com', '2019-07-05'),
-(5, 'Himanshu@Yahoo.com', '2023-05-09'),
-(6, 'Hitesh@Twitter.com', '2015-01-01'),
-(7, 'Rakesh@facebook.com', null);
+#create database for assignment5
+create database ass5;
+use ass5;
+#1)	create a table named sales_data with columns: product_id, sale_date, and  quantity_sold.
+create table sales_data(product_id int, sale_date date, quantity_sold int);
+#2)	insert some sample data into the table:
+insert into sales_data values(1, '2022-01-01', 20),
+							 (2, '2022-01-01', 15),
+   		                     (1, '2022-01-02', 10),
+    	        	         (2, '2022-01-02', 25),
+    		                 (1, '2022-01-03', 30),
+    		                 (2, '2022-01-03', 18),
+						     (1, '2022-01-04', 12),
+							 (2, '2022-01-04', 22);
 
-select * from email_signup;
-#Write a query to find gmail accounts with latest and first signup date and difference between both the dates 
-SELECT 
-    COUNT(CASE WHEN email_id LIKE '%@gmail.com' THEN 1 END) AS count_gmail_account,
-    MAX(signup_date) AS latest_signup_date,
-    MIN(signup_date) AS first_signup_date,
-    DATEDIFF(MAX(signup_date), MIN(signup_date)) AS diff_in_days
-FROM 
-    email_signup
-WHERE 
-    email_id LIKE '%@gmail.com';
-    
-#write the query to replace null value with ‘1970-01-01’
-update email_signup set signup_date='1970-01-01' where signup_date is null;
-select * from email_signup;
+select * from sales_data;
+#3)	Assign rank by partition based on product_id and find the latest product_id sold
+SELECT
+    product_id,
+    sale_date,
+    quantity_sold,
+    RANK() OVER (PARTITION BY product_id ORDER BY quantity_sold) AS rank_within_product,
+    MAX(quantity_sold) OVER (PARTITION BY product_id) AS lates_sold_quantity
+FROM
+    sales_data;
+
+#4)	Retrieve the quantity_sold value from a previous row and compare the quantity_sold.
+select *,lag(quantity_sold) over(partition by product_id order by quantity_sold) 
+as previous_quantity_sold
+from sales_data;
+
+#5)	Partition based on product_id and return the first and last values in ordered set.
+
+select product_id,
+first_value(quantity_sold) over(partition by product_id order by sale_date) as FirstValue,
+last_value(quantity_sold) over(partition by product_id order by sale_date rows between unbounded preceding and unbounded following) as LastValue
+from sales_data;
+
