@@ -5,13 +5,13 @@ use ass5;
 create table sales_data(product_id int, sale_date date, quantity_sold int);
 #2)	insert some sample data into the table:
 insert into sales_data values(1, '2022-01-01', 20),
-							 (2, '2022-01-01', 15),
-   		                     (1, '2022-01-02', 10),
-    	        	         (2, '2022-01-02', 25),
-    		                 (1, '2022-01-03', 30),
-    		                 (2, '2022-01-03', 18),
-						     (1, '2022-01-04', 12),
-							 (2, '2022-01-04', 22);
+			     (2, '2022-01-01', 15),
+   		             (1, '2022-01-02', 10),
+    	        	     (2, '2022-01-02', 25),
+    		             (1, '2022-01-03', 30),
+    		             (2, '2022-01-03', 18),
+			     (1, '2022-01-04', 12),
+			     (2, '2022-01-04', 22);
 
 select * from sales_data;
 #3)	Assign rank by partition based on product_id and find the latest product_id sold
