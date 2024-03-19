@@ -1,29 +1,18 @@
-#create database for assignment4
-create database ass4;
-use ass4;
-#create table email_signup
-create table email_signup(id int primary key, email_id varchar(30), signup_date date);
-#inserting records to email_signup
-insert into email_signup values(1, 'Rajesh@Gmail.com', '2022-02-01'),
-(2, 'Rakesh_gmail@rediffmail.com', '2023-01-22'),
-(3, 'Hitest@Gmail.com', '2020-09-08'),
-(4, 'Salil@Gmmail.com', '2019-07-05'),
-(5, 'Himanshu@Yahoo.com', '2023-05-09'),
-(6, 'Hitesh@Twitter.com', '2015-01-01'),
-(7, 'Rakesh@facebook.com', null);
+#create database for assignment3
+create database ass3;
+use ass3;
+#create table dept_tbl
+create table dept_tbl(id_deptname varchar(50), emp_name varchar(30), salary int);
+#inserting records to dept_tbl
+insert into dept_tbl values('1111-MATH', 'RAHUL', 10000),
+('1111-MATH', 'RAKESH', 20000),
+('2222-SCIENCE', 'AKASH', 10000),
+('222-SCIENCE', 'ANDREW', 10000),
+('22-CHEM', 'ANKIT', 25000),
+('3333-CHEM', 'SONIKA', 12000),
+('4444-BIO', 'HITESH', 2300),
+('44-BIO', 'AKSHAY', 10000);
+select * from dept_tbl;
+#Find the total salary of each department
+select substring_index(id_deptname,'-',-1) as dept_name,sum(salary) as total_salary from dept_tbl group by substring_index(id_deptname,'-',-1);
 
-select * from email_signup;
-#Write a query to find gmail accounts with latest and first signup date and difference between both the dates 
-SELECT 
-    COUNT(CASE WHEN email_id LIKE '%@gmail.com' THEN 1 END) AS count_gmail_account,
-    MAX(signup_date) AS latest_signup_date,
-    MIN(signup_date) AS first_signup_date,
-    DATEDIFF(MAX(signup_date), MIN(signup_date)) AS diff_in_days
-FROM 
-    email_signup
-WHERE 
-    email_id LIKE '%@gmail.com';
-    
-#write the query to replace null value with ‘1970-01-01’
-update email_signup set signup_date='1970-01-01' where signup_date is null;
-select * from email_signup;
